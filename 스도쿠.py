@@ -49,83 +49,101 @@ class SudokuGenerator:
         for row in self.grid:
             print(row)
 
-    def is_valid(board, row, col, num):
+    def is_valid(self, board, row, col, num):
         if(board[row][col] != 0):
-            return 0
+            return False
         for i in range(8):
             if(board[row][i] == num):
-                return 0
+                return False
             if(board[i][col] == num):
-                return 0
+                return False
         if(row<3):
             for i in range(3):
                 if(col<3):
                     for j in range(3):
                         if(board[i][j] == num):
-                            return 0
+                            return False
                 elif(col<6):
                     for j in range(3, 6):
                         if(board[i][j] == num):
-                            return 0
+                            return False
                 else:
                     for j in range(6, 9):
                         if(board[i][j] == num):
-                            return 0
+                            return False
+            return True
         elif(row<6):
             for i in range(3,6):
                 if(col<3):
                     for j in range(3):
                         if(board[i][j] == num):
-                            return 0
+                            return False
                 elif(col<6):
                     for j in range(3, 6):
                         if(board[i][j] == num):
-                            return 0
+                            return False
                 else:
                     for j in range(6, 9):
                         if(board[i][j] == num):
-                            return 0
+                            return False
+            return True
         else:
             for i in range(6,9):
                 if(col<3):
                     for j in range(3):
                         if(board[i][j] == num):
-                            return 0
+                            return False
                 elif(col<6):
                     for j in range(3, 6):
                         if(board[i][j] == num):
-                            return 0
+                            return False
                 else:
                     for j in range(6, 9):
                         if(board[i][j] == num):
-                            return 0
-            
-    def solve_sudoku(board):
-
-        for i in range(9):
-            for j in range(9):
-                for k in range(1, 10):
-                    if (board.is_valid(i, j, k) != 0):
-                        board[i][j] = k
-        m = 0
-        for i in range(9):
-            for j in range(9):
-                if board[i][j] !=0:
-                    a=a+1
-        if a==81:
+                            return False
             return True
+
+    def solve_sudoku(self, board): #선배님들의 도움을 받았습니다.
+        n = 0
+        record = []
+        for i in range(9):
+            for j in range(9):
+                if board[i][j] ==0:
+                    record.append([0, i, j])
+                    n+=1
+        
+        solved =  self.back_trace(board, record, 0)
+        return solved
+        
+        
     
-    def print_board(board):
-        board = solve_sudoku(board)
+    def print_board(self, board):
         for row in board:
             print(row)
 
-    
-    
+    def back_trace(self, board, record, n):
+        if len(record) == n:
+            return True
+        
+        x = record[n][1]
+        y = record[n][2]
 
-
+        for k in range(1, 10):
+            if self.is_valid(board, x, y, k):
+                board[x][y] = k
+                if self.back_trace(board, record, n + 1):
+                    return True
+                board[x][y] = 0
+        return False
 
 # 사용 예시
 gen = SudokuGenerator()
 gen.remove_digits(40) # 40개의 숫자를 지움 (난이도 조절)
 gen.print_grid()
+print("\n")
+puzzle = gen.grid
+print("\n")
+if (gen.solve_sudoku(puzzle)):
+    gen.print_board(puzzle)
+else:
+    print("값을 찾을 수 없습니다.")
