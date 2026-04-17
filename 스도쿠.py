@@ -1,11 +1,11 @@
 import random
 
 class SudokuGenerator:
-    def __init__(self):
+    def __init__(self): #스도쿠 판 생성만 AI 사용
         self.grid = [[0]*9 for _ in range(9)]
         self.generate_full_grid()
 
-    # 1. 완성된 스도쿠 판 생성 (백트래킹)
+    # 1. 완성된 스도쿠 판 생성
     def generate_full_grid(self):
         for i in range(81):
             row = i // 9
@@ -49,7 +49,7 @@ class SudokuGenerator:
         for row in self.grid:
             print(row)
 
-    def is_valid(self, board, row, col, num):
+    def is_valid(self, board, row, col, num): #판 채우는 건 직접....
         if(board[row][col] != 0):
             return False
         for i in range(8):
